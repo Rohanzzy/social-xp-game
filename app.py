@@ -1,5 +1,33 @@
 # app.py
 import streamlit as st
+# Apply custom CSS for better text contrast
+st.markdown("""
+    <style>
+    /* Make challenge text darker for readability */
+    div[data-testid="stMarkdownContainer"] p, 
+    div[data-testid="stMarkdownContainer"] span {
+        color: #e0e0e0 !important;
+        font-size: 1rem !important;
+        font-weight: 500;
+    }
+
+    /* Style for challenge cards */
+    .stContainer, .stMarkdown {
+        background-color: #1e1e1e !important;
+        border-radius: 10px;
+        padding: 15px;
+    }
+
+    /* Buttons */
+    button[kind="secondary"] {
+        color: white !important;
+        background-color: #444 !important;
+    }
+    button[kind="secondary"]:hover {
+        background-color: #666 !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
 from pathlib import Path
 import json, random, datetime
 from typing import List, Dict
@@ -18,6 +46,21 @@ XP_BY_DIFFICULTY = {
     "boss": 35,
     "creative": 8,
 }
+
+for challenge in todays_challenges:
+    st.markdown(f"""
+        <div style="
+            background-color:#2c2c2c;
+            padding:15px;
+            border-radius:12px;
+            margin-bottom:10px;
+            color:#e0e0e0;
+            font-size:1rem;
+            font-weight:500;">
+            {challenge}
+        </div>
+    """, unsafe_allow_html=True)
+
 
 # Full 100 challenges (id: (description, difficulty))
 CHALLENGES = {
@@ -198,7 +241,7 @@ with st.sidebar:
                 data.pop(nickname, None)
                 save_data(data)
             st.success("Progress reset for this nickname. Refreshing...")
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.error("Type RESET in the box above to confirm.")
 
@@ -296,3 +339,4 @@ else:
 
 st.markdown("---")
 st.write("Tips: Use a nickname (keeps local progress). If you deploy this to Streamlit Cloud, the JSON will be stored on the server — it's fine for demo use, but for long-term per-user persistence we should use Google Sheets or Supabase. Ask me and I’ll add that for you.")
+
