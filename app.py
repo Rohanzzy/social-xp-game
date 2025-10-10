@@ -6,7 +6,7 @@ st.markdown("""
     /* Make challenge text darker for readability */
     div[data-testid="stMarkdownContainer"] p, 
     div[data-testid="stMarkdownContainer"] span {
-        color: #e0e0e0 !important;
+        color: #000000 !important;
         font-size: 1rem !important;
         font-weight: 500;
     }
@@ -324,6 +324,7 @@ else:
 
 st.markdown("---")
 st.write("Tips: Use a nickname (keeps local progress). If you deploy this to Streamlit Cloud, the JSON will be stored on the server — it's fine for demo use, but for long-term per-user persistence we should use Google Sheets or Supabase. Ask me and I’ll add that for you.")
+
 
 
 
