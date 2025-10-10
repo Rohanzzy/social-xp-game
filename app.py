@@ -215,7 +215,7 @@ with st.sidebar:
         data[nickname] = ud
         save_data(data)
         st.success("Today's challenges drawn! (refreshing...)")
-        st.experimental_rerun()
+        st.rerun()
 
     st.markdown("**Reset progress**")
     confirm = st.text_input("Type RESET to confirm reset", value="", key="reset_input")
@@ -324,5 +324,6 @@ else:
 
 st.markdown("---")
 st.write("Tips: Use a nickname (keeps local progress). If you deploy this to Streamlit Cloud, the JSON will be stored on the server — it's fine for demo use, but for long-term per-user persistence we should use Google Sheets or Supabase. Ask me and I’ll add that for you.")
+
 
 
