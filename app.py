@@ -297,7 +297,7 @@ for cid in picks:
                 data[nickname] = user_data
                 save_data(data)
                 st.success(f"Nice — you earned +{xp} XP! 🎉")
-                st.experimental_rerun()
+                st.rerun()
             else:
                 st.info("Already recorded today.")
 
@@ -324,6 +324,7 @@ else:
 
 st.markdown("---")
 st.write("Tips: Use a nickname (keeps local progress). If you deploy this to Streamlit Cloud, the JSON will be stored on the server — it's fine for demo use, but for long-term per-user persistence we should use Google Sheets or Supabase. Ask me and I’ll add that for you.")
+
 
 
 
