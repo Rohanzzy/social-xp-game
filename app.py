@@ -47,21 +47,6 @@ XP_BY_DIFFICULTY = {
     "creative": 8,
 }
 
-for challenge in todays_challenges:
-    st.markdown(f"""
-        <div style="
-            background-color:#2c2c2c;
-            padding:15px;
-            border-radius:12px;
-            margin-bottom:10px;
-            color:#e0e0e0;
-            font-size:1rem;
-            font-weight:500;">
-            {challenge}
-        </div>
-    """, unsafe_allow_html=True)
-
-
 # Full 100 challenges (id: (description, difficulty))
 CHALLENGES = {
 1: ("Smile at 5 strangers.", "easy"),
@@ -339,4 +324,5 @@ else:
 
 st.markdown("---")
 st.write("Tips: Use a nickname (keeps local progress). If you deploy this to Streamlit Cloud, the JSON will be stored on the server — it's fine for demo use, but for long-term per-user persistence we should use Google Sheets or Supabase. Ask me and I’ll add that for you.")
+
 
