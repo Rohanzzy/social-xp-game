@@ -142,7 +142,14 @@ def get_today_str():
 def calc_level(total_xp: int) -> int:
     return 1 + total_xp // 100
 
+def get_random_picks(n: int = 5) -> List[int]:
+    """Get n random challenge IDs"""
+    keys = list(CHALLENGES.keys())
+    picks = random.sample(keys, k=min(n, len(keys)))
+    return picks
+
 def deterministic_daily_picks(seed_str: str, n: int = 5) -> List[int]:
+    """Get deterministic picks for a given seed (used for daily resets)"""
     keys = sorted(list(CHALLENGES.keys()))
     rnd = random.Random(seed_str)
     picks = rnd.sample(keys, k=min(n, len(keys)))
@@ -233,16 +240,15 @@ with st.sidebar:
     st.markdown("---")
     
     if st.button("🎲 Draw today's 5 challenges", use_container_width=True):
-        today = get_today_str()
-        seed = nickname + "_" + today
-        picks = deterministic_daily_picks(seed, n=5)
+        # Generate RANDOM new challenges (not deterministic)
+        picks = get_random_picks(n=5)
         
         data = load_data()
         ud = data.get(nickname, {"total_xp": 0, "completed": [], "last_played": None, "streak": 0})
-        ud["last_picks"] = {"date": today, "picks": picks}
+        ud["last_picks"] = {"date": get_today_str(), "picks": picks}
         data[nickname] = ud
         save_data(data)
-        st.success("✅ Today's challenges drawn!")
+        st.success("✅ 5 new random challenges drawn!")
         st.rerun()
 
     st.markdown("---")
@@ -285,9 +291,8 @@ today = get_today_str()
 last_picks_info = user_data.get("last_picks", {})
 
 if last_picks_info.get("date") != today:
-    # Generate new picks for today
-    seed = nickname + "_" + today
-    picks = deterministic_daily_picks(seed, n=5)
+    # New day: auto-generate random challenges
+    picks = get_random_picks(n=5)
     user_data["last_picks"] = {"date": today, "picks": picks}
     data[nickname] = user_data
     save_data(data)
