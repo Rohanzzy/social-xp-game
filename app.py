@@ -1,33 +1,4 @@
-# app.py
 import streamlit as st
-# Apply custom CSS for better text contrast
-st.markdown("""
-    <style>
-    /* Make challenge text darker for readability */
-    div[data-testid="stMarkdownContainer"] p, 
-    div[data-testid="stMarkdownContainer"] span {
-        color: #e0e0e0 !important;
-        font-size: 1rem !important;
-        font-weight: 500;
-    }
-
-    /* Style for challenge cards */
-    .stContainer, .stMarkdown {
-        background-color: #1e1e1e !important;
-        border-radius: 10px;
-        padding: 15px;
-    }
-
-    /* Buttons */
-    button[kind="secondary"] {
-        color: white !important;
-        background-color: #444 !important;
-    }
-    button[kind="secondary"]:hover {
-        background-color: #666 !important;
-    }
-    </style>
-""", unsafe_allow_html=True)
 from pathlib import Path
 import json, random, datetime
 from typing import List, Dict
@@ -169,7 +140,7 @@ def get_today_str():
     return datetime.date.today().isoformat()
 
 def calc_level(total_xp: int) -> int:
-    return 1 + total_xp // 100  # every 100 XP = new level
+    return 1 + total_xp // 100
 
 def deterministic_daily_picks(seed_str: str, n: int = 5) -> List[int]:
     keys = sorted(list(CHALLENGES.keys()))
@@ -178,89 +149,150 @@ def deterministic_daily_picks(seed_str: str, n: int = 5) -> List[int]:
     return picks
 
 # -------------------------
-# UI
+# Page Config & Styling
 # -------------------------
 st.set_page_config(page_title="Social XP Game 🎮", page_icon="🎲", layout="centered")
 
-# CSS for game-style visuals
-st.markdown(
-    """
+st.markdown("""
     <style>
-    .big-title { font-size:34px; font-weight:700; }
-    .card { background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(245,250,255,0.95)); padding:12px; border-radius:12px; box-shadow: 0 6px 18px rgba(0,0,0,0.06);}
-    .muted { color: #666; font-size:12px; }
+    /* Dark theme text fixes */
+    body {
+        background-color: #0e1117;
+        color: #e0e0e0;
+    }
+    
+    /* Challenge card styling */
+    .challenge-card {
+        background-color: #1a1a1a;
+        border: 1px solid #333;
+        border-radius: 10px;
+        padding: 16px;
+        margin: 10px 0;
+        color: #ffffff;
+    }
+    
+    .challenge-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #ffffff;
+        margin-bottom: 8px;
+    }
+    
+    .challenge-meta {
+        font-size: 12px;
+        color: #a0a0a0;
+    }
+    
+    .big-title {
+        font-size: 34px;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 10px;
+    }
+    
+    /* Better button styling */
+    .stButton > button {
+        width: 100%;
+        background-color: #1f6feb;
+        color: white;
+        border-radius: 6px;
+        border: none;
+        padding: 8px 16px;
+        font-weight: 500;
+    }
+    
+    .stButton > button:hover {
+        background-color: #388bfd;
+    }
+    
+    .stMetric {
+        background-color: #1a1a1a;
+        padding: 10px;
+        border-radius: 6px;
+    }
     </style>
-    """, unsafe_allow_html=True
-)
+""", unsafe_allow_html=True)
 
+# -------------------------
+# Main App
+# -------------------------
 st.markdown("<div class='big-title'>🎮 Social XP — Game Mode</div>", unsafe_allow_html=True)
 st.write("Pick daily challenges, complete them, gain XP, and level up. Make social practice fun!")
 
-# Sidebar: nickname and controls
+# Sidebar controls
 with st.sidebar:
     st.header("Player")
     if "nickname" not in st.session_state:
         st.session_state["nickname"] = "Player"
+    
     nickname = st.text_input("Nickname (local)", value=st.session_state["nickname"], max_chars=22)
     if not nickname:
         nickname = "Player"
     st.session_state["nickname"] = nickname
 
     st.markdown("---")
-    if st.button("🎲 Draw today's 5 challenges"):
-        seed = nickname + "_" + get_today_str()
+    
+    if st.button("🎲 Draw today's 5 challenges", use_container_width=True):
+        today = get_today_str()
+        seed = nickname + "_" + today
+        picks = deterministic_daily_picks(seed, n=5)
+        
         data = load_data()
-        ud = data.get(nickname, {"total_xp":0,"completed":[],"last_played":None,"streak":0,"last_picks":{}})
-        ud["last_picks"] = {"date": get_today_str(), "picks": deterministic_daily_picks(seed, n=5)}
+        ud = data.get(nickname, {"total_xp": 0, "completed": [], "last_played": None, "streak": 0})
+        ud["last_picks"] = {"date": today, "picks": picks}
         data[nickname] = ud
         save_data(data)
-        st.success("Today's challenges drawn! (refreshing...)")
+        st.success("✅ Today's challenges drawn!")
         st.rerun()
 
+    st.markdown("---")
     st.markdown("**Reset progress**")
-    confirm = st.text_input("Type RESET to confirm reset", value="", key="reset_input")
-    if st.button("Reset progress now"):
+    confirm = st.text_input("Type RESET to confirm", value="", key="reset_input")
+    if st.button("Reset progress now", use_container_width=True):
         if confirm.strip().upper() == "RESET":
             data = load_data()
             if nickname in data:
                 data.pop(nickname, None)
                 save_data(data)
-            st.success("Progress reset for this nickname. Refreshing...")
+            st.success("✅ Progress reset. Refreshing...")
             st.rerun()
         else:
             st.error("Type RESET in the box above to confirm.")
 
-# Load data
+# Load user data
 data = load_data()
-user_data = data.get(nickname, {"total_xp":0,"completed":[],"last_played":None,"streak":0,"last_picks":{}})
+user_data = data.get(nickname, {"total_xp": 0, "completed": [], "last_played": None, "streak": 0})
 
-# Top metrics
+# Display metrics
 col1, col2, col3 = st.columns([1.2, 1, 1])
 with col1:
     st.metric("Level", f"{calc_level(user_data['total_xp'])} ⭐")
 with col2:
     st.metric("XP", f"{user_data['total_xp']} XP")
 with col3:
-    st.metric("Streak", f"{user_data.get('streak',0)} days 🔥")
+    st.metric("Streak", f"{user_data.get('streak', 0)} days 🔥")
 
 level = calc_level(user_data["total_xp"])
-xp_into_level = user_data["total_xp"] - (level-1)*100
+xp_into_level = user_data["total_xp"] - (level - 1) * 100
 xp_next = 100
-st.write(f"Progress to next level: {xp_into_level}/{xp_next} XP")
+st.write(f"Progress to next level: **{xp_into_level}/{xp_next} XP**")
 st.progress(min(1.0, xp_into_level / xp_next))
 
 st.markdown("---")
 
 # Today's challenges
 today = get_today_str()
-if user_data.get("last_picks", {}).get("date") == today:
-    picks = user_data["last_picks"]["picks"]
-else:
+last_picks_info = user_data.get("last_picks", {})
+
+if last_picks_info.get("date") != today:
+    # Generate new picks for today
     seed = nickname + "_" + today
     picks = deterministic_daily_picks(seed, n=5)
     user_data["last_picks"] = {"date": today, "picks": picks}
     data[nickname] = user_data
     save_data(data)
+else:
+    picks = last_picks_info.get("picks", [])
 
 st.markdown("### 🎯 Today's Challenges")
 completed_today_ids = {c["id"] for c in user_data.get("completed", []) if c["date"] == today}
@@ -268,17 +300,25 @@ completed_today_ids = {c["id"] for c in user_data.get("completed", []) if c["dat
 for cid in picks:
     desc, diff = CHALLENGES.get(cid, ("(missing)", "easy"))
     xp = XP_BY_DIFFICULTY.get(diff, 5)
-    st.markdown(f"<div class='card'><b>#{cid} — {desc}</b><div class='muted'>{diff.upper()} • {xp} XP</div></div>", unsafe_allow_html=True)
+    
+    # Display challenge card
+    st.markdown(f"""
+        <div class='challenge-card'>
+            <div class='challenge-title'>#{cid} — {desc}</div>
+            <div class='challenge-meta'>{diff.upper()} • {xp} XP</div>
+        </div>
+    """, unsafe_allow_html=True)
+    
     if cid in completed_today_ids:
-        st.success(f"Completed today (+{xp} XP) ✅")
+        st.success(f"✅ Completed today (+{xp} XP)")
     else:
-        if st.button(f"Complete #{cid} (+{xp} XP)", key=f"complete_{nickname}_{today}_{cid}"):
-            # prevent duplicate same-day completion
-            already = any((c["id"]==cid and c["date"]==today) for c in user_data.get("completed", []))
+        if st.button(f"Complete #{cid} (+{xp} XP)", key=f"complete_{cid}"):
+            already = any((c["id"] == cid and c["date"] == today) for c in user_data.get("completed", []))
             if not already:
-                user_data["total_xp"] = user_data.get("total_xp",0) + xp
-                user_data.setdefault("completed", []).append({"id":cid,"date":today,"xp":xp,"desc":desc})
-                # update streak
+                user_data["total_xp"] = user_data.get("total_xp", 0) + xp
+                user_data.setdefault("completed", []).append({"id": cid, "date": today, "xp": xp, "desc": desc})
+                
+                # Update streak
                 last = user_data.get("last_played")
                 if last:
                     try:
@@ -287,16 +327,18 @@ for cid in picks:
                         last_date = None
                 else:
                     last_date = None
+                
                 if last_date == datetime.date.today() - datetime.timedelta(days=1):
-                    user_data["streak"] = user_data.get("streak",0) + 1
+                    user_data["streak"] = user_data.get("streak", 0) + 1
                 elif last_date == datetime.date.today():
                     pass
                 else:
                     user_data["streak"] = 1
+                
                 user_data["last_played"] = today
                 data[nickname] = user_data
                 save_data(data)
-                st.success(f"Nice — you earned +{xp} XP! 🎉")
+                st.success(f"🎉 +{xp} XP earned!")
                 st.rerun()
             else:
                 st.info("Already recorded today.")
@@ -306,7 +348,7 @@ st.markdown("### 📜 Recent completions")
 recent = user_data.get("completed", [])[-10:]
 if recent:
     for c in reversed(recent):
-        st.write(f"• #{c['id']} on {c['date']} → +{c['xp']} XP — {c.get('desc','')}")
+        st.write(f"• **#{c['id']}** on {c['date']} → **+{c['xp']} XP** — {c.get('desc', '')}")
 else:
     st.write("_No completions yet. Try today's challenges!_")
 
@@ -315,7 +357,7 @@ st.markdown("### 🏆 Local leaderboard (this machine)")
 if data:
     leaderboard = []
     for name, ud in data.items():
-        leaderboard.append((name, ud.get("total_xp",0), ud.get("streak",0)))
+        leaderboard.append((name, ud.get("total_xp", 0), ud.get("streak", 0)))
     leaderboard.sort(key=lambda x: x[1], reverse=True)
     for i, (name, xp, streak_) in enumerate(leaderboard[:10], start=1):
         st.write(f"{i}. **{name}** — {xp} XP | streak: {streak_} 🔥")
@@ -323,10 +365,4 @@ else:
     st.write("_No players yet._")
 
 st.markdown("---")
-st.write("Tips: Use a nickname (keeps local progress). If you deploy this to Streamlit Cloud, the JSON will be stored on the server — it's fine for demo use, but for long-term per-user persistence we should use Google Sheets or Supabase. Ask me and I’ll add that for you.")
-
-
-
-
-
-
+st.info("💡 Tip: Use a nickname to keep local progress. For production, consider using Google Sheets or Supabase for per-user persistence.")
