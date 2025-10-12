@@ -285,7 +285,7 @@ export default function SocialXPGame() {
       {/* Header */}
       <div className="max-w-6xl mx-auto">
         <div className="text-4xl md:text-5xl font-black mb-2 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-          🎮 SOCIAL XP
+          SOCIAL XP
         </div>
         <div className="text-cyan-300 text-sm font-semibold tracking-widest">LEVEL UP YOUR SOCIAL CONFIDENCE</div>
       </div>
@@ -473,3 +473,4 @@ function ChallengeDetail({ challenge, onClose, onComplete }) {
     </div>
   );
 }
+
