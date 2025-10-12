@@ -283,13 +283,8 @@ st.markdown("---")
 st.markdown("#### 🎯 How confident are you feeling today?")
 confidence = st.slider("Pick a number:", min_value=1, max_value=10, value=5, label_visibility="collapsed")
 
-# Show confidence label with big font
-st.markdown(f"""
-    <div style='text-align: center; padding: 30px; background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%); border-radius: 15px; border: 3px solid #06b6d4; margin: 20px 0;'>
-        <div style='font-size: 64px; font-weight: 900; background: linear-gradient(90deg, #06b6d4 0%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px;'>{confidence}/10</div>
-        <div style='color: #22d3ee; font-size: 22px; font-weight: 700;'>{CONFIDENCE_LABELS[confidence]}</div>
-    </div>
-""", unsafe_allow_html=True)
+# Show confidence label inline (small)
+st.markdown(f"<div style='text-align: center; font-size: 16px; color: #22d3ee; margin: 8px 0;'><strong>{confidence}/10</strong> — {CONFIDENCE_LABELS[confidence]}</div>", unsafe_allow_html=True)
 
 st.session_state.confidence = confidence
 
