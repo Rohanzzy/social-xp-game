@@ -322,8 +322,6 @@ if st.session_state.loading:
 
 st.markdown("---")
 
-st.markdown("---")
-
 # =====================
 # CHALLENGES DISPLAY
 # =====================
@@ -404,4 +402,5 @@ with stat_col4:
             <div style='font-size: 40px; font-weight: 900; color: #a855f7;'>{f"{avg_conf}/10" if avg_conf else "N/A"}</div>
         </div>
     """, unsafe_allow_html=True)
+
 
