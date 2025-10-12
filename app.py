@@ -295,7 +295,7 @@ export default function SocialXPGame() {
         {/* WELCOME SECTION */}
         <div className="bg-gradient-to-r from-purple-800/40 to-cyan-800/40 border-2 border-purple-500/50 rounded-2xl p-8 mb-8 backdrop-blur-sm">
           <h1 className="text-3xl md:text-4xl font-black mb-4">
-            Hey <span className="text-transparent bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text">{userName}</span>, how's it going? 🚀
+            Hey <span className="text-transparent bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text">{userName}</span>, how\'s it going? 🚀
           </h1>
           <p className="text-purple-200 text-lg mb-8">Ready to build some social confidence today?</p>
 
@@ -473,4 +473,5 @@ function ChallengeDetail({ challenge, onClose, onComplete }) {
     </div>
   );
 }
+
 
