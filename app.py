@@ -51,6 +51,26 @@ SOCIALIZATION_QUOTES = [
     '"The best way to find yourself is in service to others." - Gandhi',
 ]
 
+CONFIDENCE_LABELS = {
+    1: "😰 Not ready - maybe tomorrow",
+    2: "😔 Bit nervous - small steps only",
+    3: "😐 Neutral - let's ease in",
+    4: "🙂 Getting there - some social time",
+    5: "😊 Decent - can do easy stuff",
+    6: "🤔 Ready - let's try medium challenges",
+    7: "😄 Confident - bring it on",
+    8: "🔥 Very confident - I got this",
+    9: "💪 Super confident - challenge me",
+    10: "🚀 Unstoppable - I can talk to ANYONE"
+}
+
+CHALLENGE_INSTRUCTIONS = {
+    "easy": "Approach with a simple, friendly greeting. Smile and be genuine. Keep it brief and light.",
+    "medium": "Start a real conversation. Ask follow-up questions and actually listen. Be curious and authentic.",
+    "hard": "Go deeper. Exchange contact info if appropriate. Be vulnerable and show genuine interest.",
+    "superhard": "Push your limits. Lead the interaction. Be confident and inspiring. Make it memorable."
+}
+
 CHALLENGES_DB = {
     "easy": [
         "Smile at 5 strangers.", "Compliment someone's shoes.", "Ask someone what time it is.",
