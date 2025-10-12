@@ -277,14 +277,19 @@ st.markdown("---")
 st.markdown("<div style='font-size: 32px; font-weight: 900;'>Hey <span style='background: linear-gradient(90deg, #06b6d4 0%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>{}</span>, how's it going? 🚀</div>".format(st.session_state.user_name), unsafe_allow_html=True)
 st.write("Ready to build some social confidence today?")
 
+st.markdown("---")
+
 # Confidence slider
-st.markdown("#### How confident are you feeling today?")
-col1, col2 = st.columns([4, 1])
-with col1:
-    confidence = st.slider("", min_value=1, max_value=10, value=5, label_visibility="collapsed")
-with col2:
-    if confidence:
-        st.markdown(f"<div style='font-size: 36px; font-weight: 900; text-align: center; background: linear-gradient(90deg, #06b6d4 0%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>{confidence}/10</div>", unsafe_allow_html=True)
+st.markdown("#### 🎯 How confident are you feeling today?")
+confidence = st.slider("Pick a number:", min_value=1, max_value=10, value=5, label_visibility="collapsed")
+
+# Show confidence label with big font
+st.markdown(f"""
+    <div style='text-align: center; padding: 30px; background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%); border-radius: 15px; border: 3px solid #06b6d4; margin: 20px 0;'>
+        <div style='font-size: 64px; font-weight: 900; background: linear-gradient(90deg, #06b6d4 0%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px;'>{confidence}/10</div>
+        <div style='color: #22d3ee; font-size: 22px; font-weight: 700;'>{CONFIDENCE_LABELS[confidence]}</div>
+    </div>
+""", unsafe_allow_html=True)
 
 st.session_state.confidence = confidence
 
@@ -298,22 +303,22 @@ if st.session_state.loading:
     with st.container():
         st.markdown("<div style='text-align: center; padding: 40px;'><div style='font-size: 24px; font-weight: 900; margin-bottom: 20px;'>✨ Creating Your Perfect Challenges...</div></div>", unsafe_allow_html=True)
         
-        # Simulate loading
-        loading_placeholder = st.empty()
+        # Show one quote for 5 seconds
+        quote = random.choice(SOCIALIZATION_QUOTES)
         quote_placeholder = st.empty()
+        timer_placeholder = st.empty()
         
-        for i in range(3):
-            with loading_placeholder.container():
-                st.markdown(f"<div style='text-align: center; font-size: 20px;'>{'⚡' * (i+1)}</div>", unsafe_allow_html=True)
-            
-            quote = random.choice(SOCIALIZATION_QUOTES)
+        for i in range(5, 0, -1):
             with quote_placeholder.container():
-                st.markdown(f"<div style='text-align: center; padding: 20px; background: rgba(100, 100, 150, 0.2); border-radius: 10px; border-left: 4px solid #06b6d4;'><i style='color: #22d3ee;'>{quote}</i></div>", unsafe_allow_html=True)
+                st.markdown(f"<div style='text-align: center; padding: 30px; background: rgba(100, 100, 150, 0.2); border-radius: 10px; border-left: 4px solid #06b6d4; margin: 20px 0;'><i style='color: #22d3ee; font-size: 18px;'>{quote}</i></div>", unsafe_allow_html=True)
+            
+            with timer_placeholder.container():
+                st.markdown(f"<div style='text-align: center; font-size: 16px; color: #a855f7;'>⏱️ Generating in {i} seconds...</div>", unsafe_allow_html=True)
             
             time.sleep(1)
         
-        loading_placeholder.empty()
         quote_placeholder.empty()
+        timer_placeholder.empty()
         
         # Generate challenges
         st.session_state.challenges = generate_daily_challenges(confidence)
@@ -325,19 +330,41 @@ st.markdown("---")
 # =====================
 # STATS SECTION
 # =====================
+st.markdown("<div style='font-size: 28px; font-weight: 900; margin: 30px 0 20px 0;'>📊 Your Stats</div>", unsafe_allow_html=True)
+
 data = load_data()
 user_data = data.get(st.session_state.user_name, {"total_xp": 0, "completed": 0, "streak": 0, "avg_confidence": 0})
 
-col1, col2, col3, col4 = st.columns(4)
-with col1:
-    st.metric("⚡ Total XP", user_data.get("total_xp", 0))
-with col2:
-    st.metric("🏆 Completed", user_data.get("completed", 0))
-with col3:
-    st.metric("🔥 Streak", f"{user_data.get('streak', 0)} days")
-with col4:
+stat_col1, stat_col2, stat_col3, stat_col4 = st.columns(4)
+with stat_col1:
+    st.markdown(f"""
+        <div style='background: rgba(34, 197, 94, 0.2); padding: 25px; border-radius: 12px; border: 2px solid #22c55e; text-align: center;'>
+            <div style='font-size: 14px; color: #a0a0a0; margin-bottom: 10px; font-weight: 600;'>⚡ TOTAL XP</div>
+            <div style='font-size: 40px; font-weight: 900; color: #22c55e;'>{user_data.get("total_xp", 0)}</div>
+        </div>
+    """, unsafe_allow_html=True)
+with stat_col2:
+    st.markdown(f"""
+        <div style='background: rgba(59, 130, 246, 0.2); padding: 25px; border-radius: 12px; border: 2px solid #3b82f6; text-align: center;'>
+            <div style='font-size: 14px; color: #a0a0a0; margin-bottom: 10px; font-weight: 600;'>🏆 COMPLETED</div>
+            <div style='font-size: 40px; font-weight: 900; color: #3b82f6;'>{user_data.get("completed", 0)}</div>
+        </div>
+    """, unsafe_allow_html=True)
+with stat_col3:
+    st.markdown(f"""
+        <div style='background: rgba(239, 68, 68, 0.2); padding: 25px; border-radius: 12px; border: 2px solid #ef4444; text-align: center;'>
+            <div style='font-size: 14px; color: #a0a0a0; margin-bottom: 10px; font-weight: 600;'>🔥 STREAK</div>
+            <div style='font-size: 40px; font-weight: 900; color: #ef4444;'>{user_data.get("streak", 0)}</div>
+        </div>
+    """, unsafe_allow_html=True)
+with stat_col4:
     avg_conf = user_data.get("avg_confidence", 0)
-    st.metric("💪 Avg Confidence", f"{avg_conf}/10" if avg_conf else "N/A")
+    st.markdown(f"""
+        <div style='background: rgba(168, 85, 247, 0.2); padding: 25px; border-radius: 12px; border: 2px solid #a855f7; text-align: center;'>
+            <div style='font-size: 14px; color: #a0a0a0; margin-bottom: 10px; font-weight: 600;'>💪 AVG CONFIDENCE</div>
+            <div style='font-size: 40px; font-weight: 900; color: #a855f7;'>{f"{avg_conf}/10" if avg_conf else "N/A"}</div>
+        </div>
+    """, unsafe_allow_html=True)
 
 st.markdown("---")
 
@@ -348,36 +375,37 @@ if st.session_state.challenges:
     st.markdown("#### 🎯 Your Challenges Today")
     
     for idx, challenge in enumerate(st.session_state.challenges):
-        col1, col2 = st.columns([4, 1])
+        difficulty_colors = {
+            "easy": "🟢",
+            "medium": "🔵",
+            "hard": "🟠",
+            "superhard": "🔴"
+        }
         
-        with col1:
-            difficulty_colors = {
-                "easy": "🟢",
-                "medium": "🔵",
-                "hard": "🟠",
-                "superhard": "🔴"
-            }
-            
-            st.markdown(f"""
-                <div style='background: rgba(100, 100, 150, 0.2); padding: 15px; border-radius: 10px; border-left: 4px solid #06b6d4; margin: 10px 0;'>
+        st.markdown(f"""
+            <div style='background: rgba(100, 100, 150, 0.2); padding: 20px; border-radius: 10px; border-left: 4px solid #06b6d4; margin: 15px 0;'>
+                <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;'>
                     <div style='font-weight: 900; color: #22d3ee;'>{difficulty_colors[challenge['difficulty']]} {challenge['difficulty'].upper()}</div>
-                    <div style='font-size: 16px; font-weight: 600; margin-top: 5px;'>{challenge['text']}</div>
-                    <div style='font-size: 12px; color: #a0a0a0; margin-top: 5px;'>+{challenge['xp']} XP</div>
+                    <div style='background: linear-gradient(90deg, #06b6d4 0%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900;'>+{challenge['xp']} XP</div>
                 </div>
-            """, unsafe_allow_html=True)
+                <div style='font-size: 18px; font-weight: 600; margin: 15px 0; color: #ffffff;'>{challenge['text']}</div>
+                <div style='font-size: 13px; color: #a0d8a0; background: rgba(100, 150, 100, 0.2); padding: 12px; border-radius: 6px; border-left: 3px solid #22c55e; margin-top: 10px;'>
+                    <strong>💡 How to do it:</strong> {CHALLENGE_INSTRUCTIONS[challenge['difficulty']]}
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
         
-        with col2:
-            if st.button(f"✅ Done", key=f"complete_{idx}", use_container_width=True):
-                # Update data
-                data = load_data()
-                user_data = data.get(st.session_state.user_name, {"total_xp": 0, "completed": 0, "streak": 0})
-                user_data["total_xp"] = user_data.get("total_xp", 0) + challenge["xp"]
-                user_data["completed"] = user_data.get("completed", 0) + 1
-                user_data["streak"] = user_data.get("streak", 0) + 1
-                data[st.session_state.user_name] = user_data
-                save_data(data)
-                st.success(f"🎉 +{challenge['xp']} XP!")
-                st.rerun()
+        if st.button(f"✅ Mark Complete", key=f"complete_{idx}", use_container_width=True):
+            # Update data
+            data = load_data()
+            user_data = data.get(st.session_state.user_name, {"total_xp": 0, "completed": 0, "streak": 0})
+            user_data["total_xp"] = user_data.get("total_xp", 0) + challenge["xp"]
+            user_data["completed"] = user_data.get("completed", 0) + 1
+            user_data["streak"] = user_data.get("streak", 0) + 1
+            data[st.session_state.user_name] = user_data
+            save_data(data)
+            st.success(f"🎉 +{challenge['xp']} XP!")
+            st.rerun()
 
 else:
     st.info("👈 Select your confidence level and click 'Generate Challenges' to get started!")
