@@ -7,7 +7,7 @@ import time
 from typing import List, Dict
 
 # Page config
-st.set_page_config(page_title="Social XP Game 🎮", layout="centered", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Social XP Game 🎮", layout="wide", initial_sidebar_state="collapsed")
 
 # CSS Styling
 st.markdown("""
