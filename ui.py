@@ -56,15 +56,13 @@ def apply_theme():
 
 def show_header():
     """Display app header"""
-    col1, col2 = st.columns([3, 1])
-    with col1:
-        st.markdown("<div style='font-size: 48px; font-weight: 900; background: linear-gradient(90deg, #06b6d4 0%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>🎮 SOCIAL XP</div>", unsafe_allow_html=True)
-        st.markdown("<div style='color: #22d3ee; font-size: 14px; font-weight: 900; letter-spacing: 2px;'>LEVEL UP YOUR SOCIAL CONFIDENCE</div>", unsafe_allow_html=True)
+    st.markdown("<div style='font-size: 36px; font-weight: 900; background: linear-gradient(90deg, #06b6d4 0%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 4px;'>🎮 SOCIAL XP</div>", unsafe_allow_html=True)
+    st.markdown("<div style='color: #22d3ee; font-size: 12px; font-weight: 900; letter-spacing: 1px; margin-bottom: 12px;'>LEVEL UP YOUR SOCIAL CONFIDENCE</div>", unsafe_allow_html=True)
     st.markdown("---")
 
 def show_welcome(username):
     """Display welcome section"""
-    st.markdown(f"<div style='font-size: 32px; font-weight: 900;'>Hey <span style='background: linear-gradient(90deg, #06b6d4 0%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>{username}</span>, how's it going? 🚀</div>", unsafe_allow_html=True)
+    st.markdown(f"<div style='font-size: 24px; font-weight: 900; margin: 8px 0;'>Hey <span style='background: linear-gradient(90deg, #06b6d4 0%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>{username}</span>, how's it going? 🚀</div>", unsafe_allow_html=True)
     st.write("Ready to build some social confidence today?")
     st.markdown("---")
 
@@ -88,7 +86,7 @@ def show_stat_card(label, value, color_code):
 
 def show_stats_dashboard(user_data):
     """Display stats dashboard with 4 stats"""
-    st.markdown("<div style='font-size: 24px; font-weight: 900; margin: 20px 0;'>📊 Your Stats</div>", unsafe_allow_html=True)
+    st.markdown("<div style='font-size: 20px; font-weight: 900; margin: 16px 0;'>📊 Your Stats</div>", unsafe_allow_html=True)
     
     col1, col2, col3, col4 = st.columns(4)
     with col1:
