@@ -7,13 +7,18 @@ import time
 from typing import List, Dict
 
 # Page config
-st.set_page_config(page_title="Social XP Game 🎮", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Social XP Game 🎮", layout="centered", initial_sidebar_state="collapsed")
 
 # CSS Styling
 st.markdown("""
     <style>
     [data-testid="stAppViewContainer"] {
         background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #2d1b69 100%);
+        max-width: 100%;
+    }
+    [data-testid="stMainBlockContainer"] {
+        max-width: 100%;
+        padding: 1rem;
     }
     body {
         color: #e0e0e0;
@@ -27,10 +32,19 @@ st.markdown("""
         border-radius: 10px;
         padding: 12px;
         transition: all 0.3s;
+        font-size: 14px;
     }
     .stButton > button:hover {
         transform: scale(1.05);
         box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+    }
+    @media (max-width: 640px) {
+        [data-testid="stMainBlockContainer"] {
+            padding: 0.5rem;
+        }
+        h1, h2, h3 {
+            font-size: 18px !important;
+        }
     }
     </style>
 """, unsafe_allow_html=True)
@@ -323,6 +337,12 @@ if st.session_state.loading:
 st.markdown("---")
 
 # =====================
+# STATS SECTION - MOVED TO BOTTOM
+# =====================
+
+st.markdown("---")
+
+# =====================
 # CHALLENGES DISPLAY
 # =====================
 if st.session_state.challenges:
@@ -364,43 +384,44 @@ if st.session_state.challenges:
 else:
     st.info("👈 Select your confidence level and click 'Generate Challenges' to get started!")
 
+st.markdown("---")
+
 # =====================
-# STATS SECTION
+# STATS SECTION - AT BOTTOM
 # =====================
-st.markdown("<div style='font-size: 28px; font-weight: 900; margin: 30px 0 20px 0;'>📊 Your Stats</div>", unsafe_allow_html=True)
+st.markdown("<div style='font-size: 24px; font-weight: 900; margin: 20px 0;'>📊 Your Stats</div>", unsafe_allow_html=True)
 
 data = load_data()
 user_data = data.get(st.session_state.user_name, {"total_xp": 0, "completed": 0, "streak": 0, "avg_confidence": 0})
 
+# Mobile responsive: 2 columns on mobile, 4 on desktop
 stat_col1, stat_col2, stat_col3, stat_col4 = st.columns(4)
 with stat_col1:
     st.markdown(f"""
-        <div style='background: rgba(34, 197, 94, 0.2); padding: 25px; border-radius: 12px; border: 2px solid #22c55e; text-align: center;'>
-            <div style='font-size: 14px; color: #a0a0a0; margin-bottom: 10px; font-weight: 600;'>⚡ TOTAL XP</div>
-            <div style='font-size: 40px; font-weight: 900; color: #22c55e;'>{user_data.get("total_xp", 0)}</div>
+        <div style='background: rgba(34, 197, 94, 0.2); padding: 18px; border-radius: 10px; border: 2px solid #22c55e; text-align: center;'>
+            <div style='font-size: 12px; color: #a0a0a0; margin-bottom: 8px; font-weight: 600;'>⚡ XP</div>
+            <div style='font-size: 28px; font-weight: 900; color: #22c55e;'>{user_data.get("total_xp", 0)}</div>
         </div>
     """, unsafe_allow_html=True)
 with stat_col2:
     st.markdown(f"""
-        <div style='background: rgba(59, 130, 246, 0.2); padding: 25px; border-radius: 12px; border: 2px solid #3b82f6; text-align: center;'>
-            <div style='font-size: 14px; color: #a0a0a0; margin-bottom: 10px; font-weight: 600;'>🏆 COMPLETED</div>
-            <div style='font-size: 40px; font-weight: 900; color: #3b82f6;'>{user_data.get("completed", 0)}</div>
+        <div style='background: rgba(59, 130, 246, 0.2); padding: 18px; border-radius: 10px; border: 2px solid #3b82f6; text-align: center;'>
+            <div style='font-size: 12px; color: #a0a0a0; margin-bottom: 8px; font-weight: 600;'>🏆 DONE</div>
+            <div style='font-size: 28px; font-weight: 900; color: #3b82f6;'>{user_data.get("completed", 0)}</div>
         </div>
     """, unsafe_allow_html=True)
 with stat_col3:
     st.markdown(f"""
-        <div style='background: rgba(239, 68, 68, 0.2); padding: 25px; border-radius: 12px; border: 2px solid #ef4444; text-align: center;'>
-            <div style='font-size: 14px; color: #a0a0a0; margin-bottom: 10px; font-weight: 600;'>🔥 STREAK</div>
-            <div style='font-size: 40px; font-weight: 900; color: #ef4444;'>{user_data.get("streak", 0)}</div>
+        <div style='background: rgba(239, 68, 68, 0.2); padding: 18px; border-radius: 10px; border: 2px solid #ef4444; text-align: center;'>
+            <div style='font-size: 12px; color: #a0a0a0; margin-bottom: 8px; font-weight: 600;'>🔥 STREAK</div>
+            <div style='font-size: 28px; font-weight: 900; color: #ef4444;'>{user_data.get("streak", 0)}</div>
         </div>
     """, unsafe_allow_html=True)
 with stat_col4:
     avg_conf = user_data.get("avg_confidence", 0)
     st.markdown(f"""
-        <div style='background: rgba(168, 85, 247, 0.2); padding: 25px; border-radius: 12px; border: 2px solid #a855f7; text-align: center;'>
-            <div style='font-size: 14px; color: #a0a0a0; margin-bottom: 10px; font-weight: 600;'>💪 AVG CONFIDENCE</div>
-            <div style='font-size: 40px; font-weight: 900; color: #a855f7;'>{f"{avg_conf}/10" if avg_conf else "N/A"}</div>
+        <div style='background: rgba(168, 85, 247, 0.2); padding: 18px; border-radius: 10px; border: 2px solid #a855f7; text-align: center;'>
+            <div style='font-size: 12px; color: #a0a0a0; margin-bottom: 8px; font-weight: 600;'>💪 AVG</div>
+            <div style='font-size: 28px; font-weight: 900; color: #a855f7;'>{f"{avg_conf}/10" if avg_conf else "N/A"}</div>
         </div>
     """, unsafe_allow_html=True)
-
-
