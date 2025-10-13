@@ -1,0 +1,120 @@
+# config.py - All game data and constants
+
+CONFIDENCE_LABELS = {
+    1: "😰 Not ready - maybe tomorrow",
+    2: "😔 Bit nervous - small steps only",
+    3: "😐 Neutral - let's ease in",
+    4: "🙂 Getting there - some social time",
+    5: "😊 Decent - can do easy stuff",
+    6: "🤔 Ready - let's try medium challenges",
+    7: "😄 Confident - bring it on",
+    8: "🔥 Very confident - I got this",
+    9: "💪 Super confident - challenge me",
+    10: "🚀 Unstoppable - I can talk to ANYONE"
+}
+
+SOCIALIZATION_QUOTES = [
+    '"Every conversation is a chance to change someone\'s day." - Anonymous',
+    '"Connection is the antidote to isolation." - Brené Brown',
+    '"The greatest gift you can give is your presence." - Oprah',
+    '"Real human connection is at the heart of everything." - Brian Chesky',
+    '"We\'re hardwired to connect with other people." - Daniel Goleman',
+    '"You can\'t stay in your corner waiting for others to come to you." - Winnie the Pooh',
+    '"Social connection is as vital as any physical activity." - Research',
+    '"The best way to find yourself is in service to others." - Gandhi',
+]
+
+CHALLENGE_INSTRUCTIONS = {
+    "easy": "Approach with a simple, friendly greeting. Smile and be genuine. Keep it brief and light.",
+    "medium": "Start a real conversation. Ask follow-up questions and actually listen. Be curious and authentic.",
+    "hard": "Go deeper. Exchange contact info if appropriate. Be vulnerable and show genuine interest.",
+    "superhard": "Push your limits. Lead the interaction. Be confident and inspiring. Make it memorable."
+}
+
+XP_BY_DIFFICULTY = {
+    "easy": 5,
+    "medium": 10,
+    "hard": 20,
+    "superhard": 35
+}
+
+CHALLENGES_DB = {
+    "easy": [
+        "Smile at 5 strangers.", "Compliment someone's shoes.", "Ask someone what time it is.",
+        "Say 'Have a good day' to a cashier.", "Ask for directions even if you know the way.",
+        "Tell a friend they look great today.", "Hold eye contact with someone for 3 seconds and smile.",
+        "Ask someone's name and remember it.", "Ask someone about their weekend plans.",
+        "Ask someone how their day's going — and actually listen.", "Compliment someone's hairstyle.",
+        "Ask a waiter/waitress for their food recommendation.", "Say 'You have a good vibe' to someone.",
+        "Ask a stranger where they're from.", "Introduce yourself to someone in your gym/café.",
+        "Wave or say hi to a neighbor.", "Start small talk in a queue.",
+        "Ask a coworker/classmate for a small favor.", "Hold the door open for someone and make eye contact.",
+        "Ask someone what music they're listening to.", "Compliment someone's smile.",
+        "Ask a stranger their favorite food.", "Say thank you with a smile.", "Compliment someone's jewelry.",
+        "Ask someone's opinion on the weather.", "Make eye contact and nod to someone.",
+        "Ask someone where they get their energy.", "Compliment someone's handwriting.",
+        "Ask if they know a good place to eat nearby.", "Tell someone you like their positive energy.",
+        "Ask about their pet.", "Compliment their color choice.", "Ask 'What made you smile today?'",
+        "Say 'You seem really cool' to someone.", "Ask if they've been somewhere cool recently.",
+        "Compliment someone's phone case.", "Ask their go-to comfort food.", "Tell someone they have nice eyes.",
+        "Ask a stranger their favorite music.", "Smile genuinely at someone.",
+        "Ask 'What's something good that happened to you?'", "Compliment someone's laugh.",
+        "Ask a stranger for an opinion.", "Tell someone they're having a good day.",
+        "Ask what hobby they're passionate about.", "Compliment a visible tattoo.",
+        "Ask 'What's your favorite season?'", "Tell someone they have a friendly face.",
+        "Ask what they love about their job.", "Compliment their effort or hard work.",
+    ],
+    "medium": [
+        "Ask someone's opinion on something like 'Which coffee is better?'",
+        "Start a funny conversation about the weather.",
+        "Ask someone about their outfit and where they got it.",
+        "Ask a stranger to take your photo.",
+        "Ask for help choosing between two things in a store.",
+        "Ask a stranger about their tattoo or accessory.",
+        "Give a genuine compliment to someone of the opposite gender.",
+        "Ask someone what their dream job is.",
+        "Ask what motivates them.",
+        "Ask a stranger if they believe in luck.",
+        "Ask for a restaurant recommendation.",
+        "Start a random conversation on the elevator.",
+        "Ask someone about their favorite childhood cartoon.",
+        "Ask about their favorite phone app.",
+        "Compliment someone's confidence.",
+        "Ask someone's opinion on a trending topic.",
+        "Ask if they prefer cats or dogs and debate playfully.",
+        "Ask someone to teach you a handshake.",
+        "Make someone laugh intentionally.",
+        "Ask a stranger what book they're reading.",
+        "Ask what skill they wish they had.",
+        "Start a conversation about a TV show or movie.",
+        "Ask someone what country they'd love to visit.",
+        "Compliment someone on their work or project.",
+        "Ask someone about their biggest achievement.",
+        "Start a convo about a popular podcast.",
+        "Ask someone what makes them feel alive.",
+        "Compliment someone's communication skills.",
+        "Ask someone what they're grateful for today.",
+        "Start a conversation about travel experiences.",
+    ],
+    "hard": [
+        "Ask someone to high-five you.", "Ask a stranger to dance for 30 seconds.",
+        "Challenge someone to rock-paper-scissors.", "Ask for their phone number or Instagram.",
+        "Ask someone out for coffee or juice.", "Ask a random person for fashion advice.",
+        "Ask someone to rate your outfit from 1-10.", "Ask what they'd do if they won ₹1 crore.",
+        "Compliment someone in a creative/funny way.", "Ask if you can take a selfie together.",
+        "Offer to buy a stranger coffee.", "Ask about their biggest dream.",
+        "Tell someone 'You seem like someone I'd get along with.'", "Ask a stranger what makes them happy.",
+        "Ask if you can join their group for 5 minutes.", "Give compliments to 10 people.",
+        "Ask someone to recommend a movie or song.", "Ask a group a fun question.",
+        "Ask a stranger to describe their perfect day.", "Tell someone 'You look like someone who does interesting things.'",
+    ],
+    "superhard": [
+        "Ask for a 10% discount on something.", "Ask to borrow a stranger's phone for a call.",
+        "Ask someone to play a public game with you.", "Ask for directions to a nonexistent place.",
+        "Ask someone to teach you a TikTok dance.", "Ask to record a positive message for your challenge.",
+        "Give 3 compliments in a row.", "Ask someone to sing with you.", "Ask for fist bumps from 5 strangers.",
+        "Tell someone about your social confidence game.", "Lead a mini group activity.",
+        "Ask someone to freestyle dance with you.", "Do a 15-second funny public challenge.",
+        "Ask a stranger for life advice.", "Start a 'Would you rather?' game with 3 people.",
+    ],
+}
