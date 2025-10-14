@@ -4,10 +4,20 @@ import random
 from config import SOCIALIZATION_QUOTES
 from logic import generate_daily_challenges
 from storage import load_data, save_data, get_user_data
-from ui import apply_theme, show_header, show_welcome, show_confidence_slider, show_stats_dashboard, show_challenge_card
+from ui import (
+    apply_theme, show_sticky_header, show_welcome_section, 
+    show_confidence_slider, show_generate_button, show_loading_screen,
+    show_challenges_header, show_challenge_card, show_empty_state,
+    show_stats_dashboard
+)
 
 # Config
-st.set_page_config(page_title="Social XP Game 🎮", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(
+    page_title="Social XP Game 🎮",
+    layout="centered",
+    initial_sidebar_state="collapsed",
+    initial_sidebar_state="collapsed"
+)
 
 # Apply theme
 apply_theme()
@@ -16,62 +26,69 @@ apply_theme()
 if "user_name" not in st.session_state:
     st.session_state.user_name = "Player"
 if "confidence" not in st.session_state:
-    st.session_state.confidence = None
+    st.session_state.confidence = 5
 if "challenges" not in st.session_state:
     st.session_state.challenges = []
 if "loading" not in st.session_state:
     st.session_state.loading = False
 
-# =====================
-# UI
-# =====================
-show_header()
-show_welcome(st.session_state.user_name)
+# Load user data for header
+user_data = get_user_data(st.session_state.user_name)
 
-# Confidence slider
+# =====================
+# STICKY HEADER
+# =====================
+show_sticky_header(
+    user_data.get("total_xp", 0),
+    user_data.get("completed", 0),
+    user_data.get("streak", 0)
+)
+
+# =====================
+# WELCOME SECTION
+# =====================
+show_welcome_section(st.session_state.user_name)
+
+# =====================
+# CONFIDENCE SLIDER
+# =====================
 confidence = show_confidence_slider()
 st.session_state.confidence = confidence
 
-# Generate button
-if st.button("🎲 GENERATE CHALLENGES", use_container_width=True, key="gen_challenges"):
+# =====================
+# GENERATE BUTTON
+# =====================
+if show_generate_button():
     st.session_state.loading = True
     st.session_state.challenges = []
 
-# Loading screen
+# =====================
+# LOADING STATE
+# =====================
 if st.session_state.loading:
-    st.markdown("<div style='text-align: center; padding: 40px;'><div style='font-size: 24px; font-weight: 900; margin-bottom: 20px;'>✨ Creating Your Perfect Challenges...</div></div>", unsafe_allow_html=True)
-    
     quote = random.choice(SOCIALIZATION_QUOTES)
-    quote_placeholder = st.empty()
-    timer_placeholder = st.empty()
-    
     for i in range(5, 0, -1):
-        with quote_placeholder.container():
-            st.markdown(f"<div style='text-align: center; padding: 30px; background: rgba(100, 100, 150, 0.2); border-radius: 10px; border-left: 4px solid #06b6d4; margin: 20px 0;'><i style='color: #22d3ee; font-size: 18px;'>{quote}</i></div>", unsafe_allow_html=True)
-        
-        with timer_placeholder.container():
-            st.markdown(f"<div style='text-align: center; font-size: 16px; color: #a855f7;'>⏱️ Generating in {i} seconds...</div>", unsafe_allow_html=True)
-        
+        show_loading_screen(quote, i)
         time.sleep(1)
-    
-    quote_placeholder.empty()
-    timer_placeholder.empty()
     
     st.session_state.challenges = generate_daily_challenges(confidence)
     st.session_state.loading = False
     st.rerun()
 
-st.markdown("---")
-
 # =====================
 # CHALLENGES DISPLAY
 # =====================
 if st.session_state.challenges:
-    st.markdown("#### 🎯 Your Challenges Today")
+    show_challenges_header()
     
     def mark_complete(challenge):
         data = load_data()
-        user_data = data.get(st.session_state.user_name, {"total_xp": 0, "completed": 0, "streak": 0, "avg_confidence": 0})
+        user_data = data.get(st.session_state.user_name, {
+            "total_xp": 0,
+            "completed": 0,
+            "streak": 0,
+            "avg_confidence": 0
+        })
         user_data["total_xp"] = user_data.get("total_xp", 0) + challenge["xp"]
         user_data["completed"] = user_data.get("completed", 0) + 1
         user_data["streak"] = user_data.get("streak", 0) + 1
@@ -83,12 +100,10 @@ if st.session_state.challenges:
     for idx, challenge in enumerate(st.session_state.challenges):
         show_challenge_card(challenge, idx, mark_complete)
 else:
-    st.info("👈 Select your confidence level and click 'Generate Challenges' to get started!")
-
-st.markdown("---")
+    show_empty_state()
 
 # =====================
-# STATS DASHBOARD - AT BOTTOM
+# STATS DASHBOARD (BOTTOM)
 # =====================
 user_data = get_user_data(st.session_state.user_name)
 show_stats_dashboard(user_data)
