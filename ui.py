@@ -1,234 +1,170 @@
-# ui.py - Mobile app-style UI/UX
+# ui.py - Clean design based on wireframe
 
 import streamlit as st
-from config import CONFIDENCE_LABELS, CHALLENGE_INSTRUCTIONS
+from config import CHALLENGE_INSTRUCTIONS
 
 def apply_theme():
-    """Apply global Streamlit theme and styling"""
+    """Apply clean, minimal theme"""
     st.markdown("""
         <style>
-        * {
-            margin: 0;
-            padding: 0;
-        }
-        
         [data-testid="stAppViewContainer"] {
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #2d1b69 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
         }
         
         [data-testid="stMainBlockContainer"] {
-            max-width: 600px;
+            max-width: 500px;
             margin: 0 auto;
-            padding: 0;
+            padding: 24px 16px;
         }
         
-        body, p, span, div, label {
-            color: #e0e0e0 !important;
+        /* Typography */
+        body, p, span, div, label, input {
+            color: #ffffff !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
         
-        /* Sticky Header */
-        .sticky-header {
-            position: sticky;
-            top: 0;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 2px solid #06b6d4;
-            padding: 12px 16px;
-            z-index: 100;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .header-brand {
-            font-size: 18px;
-            font-weight: 900;
-            background: linear-gradient(90deg, #06b6d4 0%, #a855f7 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .header-stats {
-            display: flex;
-            gap: 16px;
-            font-size: 16px;
+        .main-title {
+            font-size: 32px;
             font-weight: 700;
             color: #ffffff;
+            text-align: center;
+            margin-bottom: 32px;
         }
         
-        /* Main Content */
-        .content-wrapper {
-            padding: 16px;
-        }
-        
-        .section {
-            margin-bottom: 20px;
-        }
-        
-        .section-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 12px;
-        }
-        
-        .welcome-text {
-            font-size: 28px;
-            font-weight: 900;
-            color: #ffffff;
-            margin-bottom: 8px;
-        }
-        
-        .welcome-subtext {
-            font-size: 16px;
+        .question {
+            font-size: 20px;
+            font-weight: 500;
             color: #e0e0e0;
-            margin-bottom: 16px;
-        }
-        
-        /* Slider */
-        .slider-container {
-            background: rgba(100, 100, 150, 0.15);
-            padding: 16px;
-            border-radius: 12px;
-            border: 2px solid #06b6d4;
-        }
-        
-        .slider-label {
-            font-size: 15px;
-            font-weight: 600;
-            color: #ffffff;
-            margin-bottom: 16px;
-        }
-        
-        .slider-value {
-            font-size: 40px;
-            font-weight: 900;
             text-align: center;
-            color: #22d3ee;
-            margin: 16px 0;
+            margin-bottom: 24px;
         }
         
-        .slider-feedback {
-            font-size: 17px;
-            font-weight: 600;
-            text-align: center;
-            color: #ffffff;
-            background: rgba(100, 150, 100, 0.2);
-            padding: 14px;
-            border-radius: 8px;
-            margin-top: 12px;
+        /* Slider styling */
+        .stSlider {
+            padding: 20px 0;
         }
         
         /* Button */
         .stButton > button {
             width: 100%;
-            background: linear-gradient(90deg, #06b6d4 0%, #a855f7 100%) !important;
-            color: white !important;
-            font-weight: 900 !important;
+            background: #ffffff !important;
+            color: #1a1a2e !important;
+            font-weight: 600 !important;
             border: none !important;
-            border-radius: 10px !important;
+            border-radius: 8px !important;
             padding: 14px !important;
             font-size: 16px !important;
-            transition: all 0.3s !important;
+            margin: 24px 0 !important;
+            transition: all 0.2s !important;
         }
         
         .stButton > button:hover {
-            transform: scale(1.02) !important;
-            box-shadow: 0 0 20px rgba(6, 182, 212, 0.5) !important;
+            background: #e0e0e0 !important;
+            transform: translateY(-2px) !important;
         }
         
-        /* Challenge Cards */
-        .challenge-card {
-            background: rgba(100, 100, 150, 0.2);
-            padding: 16px;
-            border-radius: 10px;
-            border-left: 4px solid #06b6d4;
-            margin: 12px 0;
-        }
-        
-        .challenge-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        
-        .challenge-difficulty {
-            font-weight: 900;
-            color: #22d3ee;
-            font-size: 12px;
-        }
-        
-        .challenge-xp {
-            background: linear-gradient(90deg, #06b6d4 0%, #a855f7 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 900;
-        }
-        
-        .challenge-text {
-            font-size: 16px;
-            font-weight: 600;
-            color: #ffffff;
-            margin: 12px 0;
-            line-height: 1.4;
-        }
-        
-        .challenge-instructions {
-            font-size: 12px;
-            color: #a0d8a0;
-            background: rgba(100, 150, 100, 0.2);
-            padding: 10px;
-            border-radius: 6px;
-            border-left: 3px solid #22c55e;
-            margin-top: 10px;
-        }
-        
-        /* Loading Screen */
-        .loading-container {
+        /* Quote box */
+        .quote-box {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 20px;
             text-align: center;
-            padding: 40px 20px;
+            margin: 24px 0;
+            font-style: italic;
+            color: #e0e0e0;
+            font-size: 14px;
+            line-height: 1.6;
         }
         
-        .loading-title {
+        /* Challenge card */
+        .challenge-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            min-height: 300px;
+        }
+        
+        .challenge-title {
             font-size: 22px;
-            font-weight: 900;
-            color: #22d3ee;
+            font-weight: 700;
+            color: #ffffff;
+            text-align: center;
             margin-bottom: 20px;
         }
         
-        .loading-quote {
-            background: rgba(100, 100, 150, 0.2);
-            border-left: 4px solid #06b6d4;
-            padding: 20px;
-            border-radius: 10px;
-            color: #22d3ee;
-            font-style: italic;
-            font-size: 14px;
+        .challenge-text {
+            font-size: 18px;
+            font-weight: 500;
+            color: #ffffff;
+            text-align: center;
             margin: 20px 0;
-            line-height: 1.5;
         }
         
-        .loading-timer {
-            font-size: 16px;
-            color: #a855f7;
+        .difficulty-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 16px 0;
+            font-size: 14px;
+            color: #e0e0e0;
+        }
+        
+        .challenge-description {
+            font-size: 14px;
+            color: #b0b0b0;
+            line-height: 1.6;
             margin-top: 16px;
-            font-weight: 600;
+            text-align: center;
         }
         
-        /* Stats Grid */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 24px;
+        }
+        
+        .nav-button {
+            background: none;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 12px 20px;
+            color: #ffffff;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .nav-button:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        /* Report card */
+        .report-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
+            text-align: center;
+            margin: 40px 0 24px 0;
+        }
+        
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            max-width: 400px;
-            margin: 0 auto;
+            gap: 16px;
+            margin-bottom: 40px;
         }
         
         .stat-card {
-            padding: 16px 12px;
-            border-radius: 8px;
-            border: 2px solid;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 24px 16px;
             text-align: center;
             aspect-ratio: 1;
             display: flex;
@@ -237,185 +173,136 @@ def apply_theme():
             align-items: center;
         }
         
-        .stat-label {
-            font-size: 13px;
+        .stat-value {
+            font-size: 48px;
+            font-weight: 700;
             color: #ffffff;
             margin-bottom: 8px;
-            font-weight: 600;
         }
         
-        .stat-value {
-            font-size: 32px;
-            font-weight: 900;
+        .stat-label {
+            font-size: 13px;
+            color: #b0b0b0;
+            line-height: 1.4;
         }
         
-        /* Info Box */
-        .info-box {
-            background: rgba(59, 130, 246, 0.15);
-            border-left: 4px solid #3b82f6;
-            padding: 16px;
-            border-radius: 8px;
-            color: #ffffff;
-            margin: 20px 0;
-        }
-        
-        @media (max-width: 600px) {
+        /* Desktop responsive */
+        @media (min-width: 768px) {
             [data-testid="stMainBlockContainer"] {
-                padding: 0;
+                max-width: 600px;
+                padding: 40px 24px;
             }
             
-            .content-wrapper {
-                padding: 12px;
+            .main-title {
+                font-size: 40px;
             }
             
-            .section {
-                margin-bottom: 16px;
+            .question {
+                font-size: 24px;
             }
             
-            .welcome-text {
-                font-size: 20px;
+            .challenge-card {
+                min-height: 350px;
+                padding: 32px;
             }
             
-            .slider-value {
-                font-size: 28px;
-            }
-            
-            .stButton > button {
-                font-size: 14px;
-                padding: 12px !important;
+            .stat-value {
+                font-size: 56px;
             }
         }
         </style>
     """, unsafe_allow_html=True)
 
-def show_sticky_header(xp, completed, streak):
-    """Display sticky header with quick stats"""
-    st.markdown(f"""
-        <div class="sticky-header">
-            <div class="header-brand">SOCIAL XP</div>
-            <div class="header-stats">
-                <span>⚡{xp}</span>
-                <span>🏆{completed}</span>
-                <span>🔥{streak}</span>
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
+def show_welcome(username):
+    """Show welcome message"""
+    st.markdown(f'<div class="main-title">Welcome back {username}</div>', unsafe_allow_html=True)
 
-def show_welcome_section(username):
-    """Display welcome message"""
-    st.markdown(f"""
-        <div class="content-wrapper">
-            <div class="section">
-                <div class="welcome-text">Hey {username}!</div>
-                <div class="welcome-subtext">How's your vibe today?</div>
-            </div>
-    """, unsafe_allow_html=True)
+def show_question():
+    """Show feeling question"""
+    st.markdown('<div class="question">How are you feeling today?</div>', unsafe_allow_html=True)
 
-def show_confidence_slider():
-    """Display confidence slider"""
-    st.markdown("""
-        <div class="slider-container">
-            <div class="slider-label">Confidence Level:</div>
-    """, unsafe_allow_html=True)
-    
+def show_slider():
+    """Show confidence slider"""
     confidence = st.slider("", min_value=1, max_value=10, value=5, label_visibility="collapsed")
-    
-    st.markdown(f"""
-            <div class="slider-value">{confidence}/10</div>
-            <div class="slider-feedback">{CONFIDENCE_LABELS[confidence]}</div>
-        </div>
-        <div class="section"></div>
-    """, unsafe_allow_html=True)
-    
     return confidence
 
 def show_generate_button():
-    """Display generate challenges button"""
-    if st.button("GENERATE CHALLENGES", use_container_width=True, key="gen_btn"):
-        return True
-    return False
+    """Show generate button"""
+    return st.button("Generate challenges for today", use_container_width=True)
 
-def show_loading_screen(quote, timer):
-    """Display loading screen"""
-    st.markdown(f"""
-        <div class="loading-container">
-            <div class="loading-title">✨ Creating Your Perfect Challenges...</div>
-            <div class="loading-quote">"{quote}"</div>
-            <div class="loading-timer">⏱️ Generating in {timer} seconds...</div>
-        </div>
-    """, unsafe_allow_html=True)
+def show_quote(quote):
+    """Show inspirational quote"""
+    st.markdown(f'<div class="quote-box">{quote}</div>', unsafe_allow_html=True)
 
-def show_challenges_header():
-    """Display challenges section header"""
-    st.markdown("""
-        <div class="section">
-            <div class="section-title">Your Challenges</div>
-        </div>
-    """, unsafe_allow_html=True)
-
-def show_challenge_card(challenge, idx, on_complete):
-    """Display single challenge card"""
-    difficulty_icons = {
-        "easy": "🟢",
-        "medium": "🔵",
-        "hard": "🟠",
-        "superhard": "🔴"
-    }
+def show_challenge_card(challenge, current_idx, total_challenges, on_prev, on_next, on_complete):
+    """Show single challenge card with navigation"""
+    difficulty_stars = "⭐" * min(5, max(1, {"easy": 1, "medium": 2, "hard": 3, "superhard": 4}.get(challenge['difficulty'], 1)))
     
     st.markdown(f"""
         <div class="challenge-card">
-            <div class="challenge-header">
-                <span class="challenge-difficulty">{difficulty_icons[challenge['difficulty']]} {challenge['difficulty'].upper()}</span>
-                <span class="challenge-xp">+{challenge['xp']} XP</span>
-            </div>
+            <div class="challenge-title">Challenge #{current_idx + 1}</div>
             <div class="challenge-text">{challenge['text']}</div>
-            <div class="challenge-instructions">
-                <strong>💡 How:</strong> {CHALLENGE_INSTRUCTIONS[challenge['difficulty']]}
+            <div class="difficulty-row">
+                <span>Difficulty - {difficulty_stars}</span>
+            </div>
+            <div class="challenge-description">
+                <strong>Description:</strong> {CHALLENGE_INSTRUCTIONS[challenge['difficulty']]}
             </div>
         </div>
     """, unsafe_allow_html=True)
     
-    if st.button(f"✅ Complete", key=f"complete_{idx}", use_container_width=True):
-        on_complete(challenge)
-
-def show_empty_state():
-    """Display empty state message"""
-    st.markdown("""
-        <div class="info-box">
-            👈 Select your confidence level and click 'Generate Challenges' to get started!
-        </div>
-    """, unsafe_allow_html=True)
-
-def show_stats_dashboard(user_data):
-    """Display stats dashboard at bottom"""
-    st.markdown("""
-        <div class="section">
-            <div class="section-title">Your Stats</div>
-            <div class="stats-grid">
-    """, unsafe_allow_html=True)
+    # Navigation and complete buttons
+    col1, col2, col3 = st.columns([1, 2, 1])
     
-    st.markdown(f"""
-                <div class="stat-card" style="background: rgba(34, 197, 94, 0.2); border-color: #22c55e;">
-                    <div class="stat-label">XP</div>
-                    <div class="stat-value" style="color: #22c55e;">{user_data.get("total_xp", 0)}</div>
-                </div>
-                <div class="stat-card" style="background: rgba(59, 130, 246, 0.2); border-color: #3b82f6;">
-                    <div class="stat-label">COMPLETED</div>
-                    <div class="stat-value" style="color: #3b82f6;">{user_data.get("completed", 0)}</div>
-                </div>
-                <div class="stat-card" style="background: rgba(239, 68, 68, 0.2); border-color: #ef4444;">
-                    <div class="stat-label">STREAK</div>
-                    <div class="stat-value" style="color: #ef4444;">{user_data.get("streak", 0)}</div>
-                </div>
-    """, unsafe_allow_html=True)
+    with col1:
+        if current_idx > 0:
+            if st.button("←", key=f"prev_{current_idx}"):
+                on_prev()
     
-    avg_conf = user_data.get("avg_confidence", 0)
+    with col2:
+        if st.button("Complete", key=f"complete_{current_idx}", use_container_width=True):
+            on_complete(challenge)
+    
+    with col3:
+        if current_idx < total_challenges - 1:
+            if st.button("→", key=f"next_{current_idx}"):
+                on_next()
+
+def show_loading(quote, seconds):
+    """Show loading state"""
     st.markdown(f"""
-                <div class="stat-card" style="background: rgba(168, 85, 247, 0.2); border-color: #a855f7;">
-                    <div class="stat-label">AVG</div>
-                    <div class="stat-value" style="color: #a855f7;">{f"{avg_conf}/10" if avg_conf else "N/A"}</div>
-                </div>
+        <div style="text-align: center; padding: 40px 0;">
+            <div style="font-size: 20px; font-weight: 600; color: #ffffff; margin-bottom: 20px;">
+                Generating your challenges...
+            </div>
+            <div class="quote-box">{quote}</div>
+            <div style="font-size: 14px; color: #b0b0b0; margin-top: 16px;">
+                {seconds} seconds remaining...
             </div>
         </div>
+    """, unsafe_allow_html=True)
+
+def show_report_card(successful, rejections, avg_confidence, streak):
+    """Show report card with 2x2 grid"""
+    st.markdown('<div class="report-title">Your Report Card</div>', unsafe_allow_html=True)
+    
+    st.markdown(f"""
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">{successful}</div>
+                <div class="stat-label">Successful<br/>interactions for<br/>the week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{rejections}</div>
+                <div class="stat-label">Rejections for<br/>the week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{avg_confidence}</div>
+                <div class="stat-label">Average<br/>confidence for<br/>the week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{streak}</div>
+                <div class="stat-label">Days streak<br/>maintained</div>
+            </div>
         </div>
     """, unsafe_allow_html=True)

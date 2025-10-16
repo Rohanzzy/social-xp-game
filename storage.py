@@ -29,8 +29,10 @@ def get_user_data(username):
     return data.get(username, {
         "total_xp": 0,
         "completed": 0,
+        "rejections": 0,
         "streak": 0,
-        "avg_confidence": 0
+        "avg_confidence": 0,
+        "successful": 0
     })
 
 def update_user_data(username, **kwargs):
