@@ -4,11 +4,15 @@ import random
 from config import SOCIALIZATION_QUOTES
 from logic import generate_daily_challenges
 from storage import load_data, save_data, get_user_data, update_user_data
-from ui import (
-    apply_theme, show_welcome, show_question, show_slider,
-    show_generate_button, show_quote, show_challenge_card,
-    show_loading, show_report_card
-)
+from ui import apply_theme
+from ui import show_welcome
+from ui import show_question
+from ui import show_slider
+from ui import show_generate_button
+from ui import show_quote
+from ui import show_challenge_card
+from ui import show_loading
+from ui import show_report_card
 
 # Page config
 st.set_page_config(
