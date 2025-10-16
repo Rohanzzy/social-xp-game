@@ -51,8 +51,9 @@ def apply_theme():
         .header-stats {
             display: flex;
             gap: 16px;
-            font-size: 12px;
+            font-size: 16px;
             font-weight: 700;
+            color: #ffffff;
         }
         
         /* Main Content */
@@ -72,48 +73,48 @@ def apply_theme():
         }
         
         .welcome-text {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 900;
             color: #ffffff;
             margin-bottom: 8px;
         }
         
         .welcome-subtext {
-            font-size: 14px;
-            color: #a0a0a0;
+            font-size: 16px;
+            color: #e0e0e0;
             margin-bottom: 16px;
         }
         
         /* Slider */
         .slider-container {
             background: rgba(100, 100, 150, 0.15);
-            padding: 20px;
+            padding: 16px;
             border-radius: 12px;
             border: 2px solid #06b6d4;
         }
         
         .slider-label {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             color: #ffffff;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
         }
         
         .slider-value {
-            font-size: 32px;
+            font-size: 40px;
             font-weight: 900;
             text-align: center;
             color: #22d3ee;
-            margin: 12px 0;
+            margin: 16px 0;
         }
         
         .slider-feedback {
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 600;
             text-align: center;
-            color: #a0d8a0;
+            color: #ffffff;
             background: rgba(100, 150, 100, 0.2);
-            padding: 12px;
+            padding: 14px;
             border-radius: 8px;
             margin-top: 12px;
         }
@@ -219,25 +220,32 @@ def apply_theme():
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
+            max-width: 400px;
+            margin: 0 auto;
         }
         
         .stat-card {
-            padding: 18px;
-            border-radius: 10px;
+            padding: 16px 12px;
+            border-radius: 8px;
             border: 2px solid;
             text-align: center;
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
         
         .stat-label {
-            font-size: 11px;
+            font-size: 13px;
             color: #ffffff;
             margin-bottom: 8px;
             font-weight: 600;
         }
         
         .stat-value {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 900;
         }
         
@@ -284,7 +292,7 @@ def show_sticky_header(xp, completed, streak):
     """Display sticky header with quick stats"""
     st.markdown(f"""
         <div class="sticky-header">
-            <div class="header-brand">🎮 SOCIAL XP</div>
+            <div class="header-brand">SOCIAL XP</div>
             <div class="header-stats">
                 <span>⚡{xp}</span>
                 <span>🏆{completed}</span>
@@ -298,7 +306,7 @@ def show_welcome_section(username):
     st.markdown(f"""
         <div class="content-wrapper">
             <div class="section">
-                <div class="welcome-text">Hey {username}! 🚀</div>
+                <div class="welcome-text">Hey {username}!</div>
                 <div class="welcome-subtext">How's your vibe today?</div>
             </div>
     """, unsafe_allow_html=True)
@@ -341,7 +349,7 @@ def show_challenges_header():
     """Display challenges section header"""
     st.markdown("""
         <div class="section">
-            <div class="section-title">🎯 Your Challenges</div>
+            <div class="section-title">Your Challenges</div>
         </div>
     """, unsafe_allow_html=True)
 
@@ -382,21 +390,21 @@ def show_stats_dashboard(user_data):
     """Display stats dashboard at bottom"""
     st.markdown("""
         <div class="section">
-            <div class="section-title">📊 Your Stats</div>
+            <div class="section-title">Your Stats</div>
             <div class="stats-grid">
     """, unsafe_allow_html=True)
     
     st.markdown(f"""
                 <div class="stat-card" style="background: rgba(34, 197, 94, 0.2); border-color: #22c55e;">
-                    <div class="stat-label">⚡ XP</div>
+                    <div class="stat-label">XP</div>
                     <div class="stat-value" style="color: #22c55e;">{user_data.get("total_xp", 0)}</div>
                 </div>
                 <div class="stat-card" style="background: rgba(59, 130, 246, 0.2); border-color: #3b82f6;">
-                    <div class="stat-label">🏆 COMPLETED</div>
+                    <div class="stat-label">COMPLETED</div>
                     <div class="stat-value" style="color: #3b82f6;">{user_data.get("completed", 0)}</div>
                 </div>
                 <div class="stat-card" style="background: rgba(239, 68, 68, 0.2); border-color: #ef4444;">
-                    <div class="stat-label">🔥 STREAK</div>
+                    <div class="stat-label">STREAK</div>
                     <div class="stat-value" style="color: #ef4444;">{user_data.get("streak", 0)}</div>
                 </div>
     """, unsafe_allow_html=True)
@@ -404,7 +412,7 @@ def show_stats_dashboard(user_data):
     avg_conf = user_data.get("avg_confidence", 0)
     st.markdown(f"""
                 <div class="stat-card" style="background: rgba(168, 85, 247, 0.2); border-color: #a855f7;">
-                    <div class="stat-label">💪 AVG</div>
+                    <div class="stat-label">AVG</div>
                     <div class="stat-value" style="color: #a855f7;">{f"{avg_conf}/10" if avg_conf else "N/A"}</div>
                 </div>
             </div>
