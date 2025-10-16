@@ -16,7 +16,6 @@ st.set_page_config(
     page_title="Social XP Game 🎮",
     layout="centered",
     initial_sidebar_state="collapsed",
-    initial_sidebar_state="collapsed"
 )
 
 # Apply theme
