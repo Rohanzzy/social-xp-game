@@ -28,12 +28,12 @@ def apply_theme():
         [data-testid="stMainBlockContainer"] {
             max-width: 500px;
             margin: 0 auto;
-            padding: 24px 16px;
+            padding: 40px 16px 24px 16px;
         }
         
         /* Welcome title with glow */
         .main-title {
-            font-size: 38px;
+            font-size: 32px;
             font-weight: 900;
             color: #ffffff;
             text-align: center;
@@ -41,6 +41,8 @@ def apply_theme():
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.5),
                          0 0 40px rgba(255, 105, 180, 0.3);
             animation: pulse 2s ease-in-out infinite;
+            line-height: 1.3;
+            padding: 0 16px;
         }
         
         @keyframes pulse {
@@ -57,7 +59,7 @@ def apply_theme():
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
         
-        /* Custom slider styling */
+        /* Custom slider styling - hide value label */
         .stSlider {
             padding: 24px 0;
         }
@@ -72,6 +74,11 @@ def apply_theme():
             width: 32px !important;
             height: 32px !important;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Hide the default slider value */
+        .stSlider > div > div > div > div[data-baseweb="slider"] > div > div {
+            display: none !important;
         }
         
         .slider-emoji-row {
@@ -125,7 +132,7 @@ def apply_theme():
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: 4px solid #ffd700;
             border-radius: 20px;
-            padding: 28px;
+            padding: 28px 28px 120px 28px;
             margin: 32px 0;
             min-height: 320px;
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4),
@@ -263,7 +270,7 @@ def apply_theme():
         
         /* Report card */
         .report-title {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 900;
             color: #ffffff;
             text-align: center;
@@ -278,6 +285,15 @@ def apply_theme():
             margin-bottom: 48px;
         }
         
+        @media (max-width: 600px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                max-width: 280px;
+                margin: 0 auto 48px auto;
+            }
+        }
+        
         .stat-card {
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
@@ -285,13 +301,19 @@ def apply_theme():
             border-radius: 20px;
             padding: 24px 16px;
             text-align: center;
-            aspect-ratio: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             transition: all 0.3s;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            min-height: 160px;
+        }
+        
+        @media (min-width: 601px) {
+            .stat-card {
+                aspect-ratio: 1;
+            }
         }
         
         .stat-card:hover {
@@ -389,7 +411,7 @@ def show_quote(quote):
     st.markdown(f'<div class="quote-box">"{quote}"</div>', unsafe_allow_html=True)
 
 def show_challenge_card(challenge, current_idx, total_challenges, on_prev, on_next, on_complete):
-    """Show Pokemon/Sports card style challenge"""
+    """Show Pokemon/Sports card style challenge with internal navigation"""
     difficulty_stars = "⭐" * min(5, max(1, {"easy": 1, "medium": 2, "hard": 3, "superhard": 4, "challenge": 4, "boss": 5, "creative": 2}.get(challenge['difficulty'], 1)))
     
     st.markdown(f"""
@@ -406,22 +428,22 @@ def show_challenge_card(challenge, current_idx, total_challenges, on_prev, on_ne
         </div>
     """, unsafe_allow_html=True)
     
-    # Navigation
+    # Navigation with arrows on both sides and complete in middle
     col1, col2, col3 = st.columns([1, 2, 1])
     
     with col1:
-        if current_idx > 0:
-            if st.button("←", key=f"prev_{current_idx}", help="Previous challenge"):
-                on_prev()
+        # Left arrow - loop to last challenge
+        if st.button("←", key=f"prev_{current_idx}", help="Previous challenge"):
+            on_prev()
     
     with col2:
         if st.button("✅ Complete Challenge", key=f"complete_{current_idx}", use_container_width=True):
             on_complete(challenge)
     
     with col3:
-        if current_idx < total_challenges - 1:
-            if st.button("→", key=f"next_{current_idx}", help="Next challenge"):
-                on_next()
+        # Right arrow - loop to first challenge
+        if st.button("→", key=f"next_{current_idx}", help="Next challenge"):
+            on_next()
 
 def show_loading(quote, seconds):
     """Show loading with animation"""
