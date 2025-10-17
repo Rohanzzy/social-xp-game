@@ -68,8 +68,9 @@ if st.session_state.loading:
     st.session_state.loading = False
     st.rerun()
 
-# Quote (always show)
-show_quote(st.session_state.quote)
+# Quote (only show during loading, not after)
+if not st.session_state.challenges and not st.session_state.loading:
+    show_quote(st.session_state.quote)
 
 # Challenge display
 if st.session_state.challenges:

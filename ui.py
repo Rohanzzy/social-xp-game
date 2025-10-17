@@ -355,9 +355,9 @@ def get_first_name(full_name):
     return full_name.split()[0] if full_name else "Player"
 
 def show_welcome(username):
-    """Show welcome with first name only"""
+    """Show welcome with first name only - centered"""
     first_name = get_first_name(username)
-    st.markdown(f'<div class="main-title">🎮 Welcome back {first_name}! 🎮</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="main-title">Welcome back {first_name}!</div>', unsafe_allow_html=True)
 
 def show_question():
     """Show feeling question"""
